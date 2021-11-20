@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'work.dart';
-import 'school.dart';
-import 'personal.dart';
+import 'package:studentreminder/event.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'calender.dart';
+import 'reminder.dart';
+import 'event.dart';
 void main() {
   runApp(MyApp());
 }
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'title',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -30,20 +32,38 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  
+  List<EventData> saveData = [];
+
+  void save() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> saveDataInString = [];
+    for(int i = 0; i < saveData.length; i++){
+      saveDataInString.add(saveData[i].exportInfo());
+    }
+    prefs.setStringList("eventInfo", saveDataInString);
+  }
+  void load() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    List<String>? saveDataInString = prefs.getStringList("eventInfo");
+    for(int i = 0; i < saveDataInString!.length; i++){
+      EventData temp = EventData(0,0,0,0,0,'0');
+      saveData.add(temp.loadInfo(saveDataInString[i]));
+    }
+  }
+  @override
+  void initState(){
+    super.initState();
+    setState(() {
+      load();
+    });
+  }
   
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    save();
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
@@ -67,14 +87,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   margin: EdgeInsets.only(top:30,bottom:30),
                   child: ElevatedButton(
                       onPressed: () {
+                        setState(() {});
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => WorkPage(title: 'work')),
+                              builder: (context) => CalenderPage(data: saveData)),
                         );
                       },
                       child: Text(
-                          'Work',
+                          'Calendar',
                           style: TextStyle(
                             fontSize: 40,
                             fontStyle: FontStyle.normal,
@@ -93,42 +114,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 margin: EdgeInsets.only(top:30,bottom:30),
                 child:ElevatedButton(
                     onPressed: (){
+                      setState(() {});
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SchoolPage(title:'school')),
+                        MaterialPageRoute(builder: (context) => ReminderPage(data: saveData)),
                       );
                     }
 
                     ,
                     child: Text(
-                        'School',
-                        style: TextStyle(
-                          fontSize: 40,
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        )
-
-                    )
-
-                ),
-              ),
-            ),
-            Expanded(
-              flex:10,
-              child:Container(
-                margin: EdgeInsets.only(top:30,bottom:30),
-                child: ElevatedButton(
-                    onPressed: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => PersonalPage(title:'Personal')),
-                      );
-                    }
-
-                    ,
-                    child: Text(
-                        'Personal',
+                        'Reminder',
                         style: TextStyle(
                           fontSize: 40,
                           fontStyle: FontStyle.normal,
