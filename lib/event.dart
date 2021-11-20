@@ -10,7 +10,8 @@ class EventData {
   int mins = 0;
 
   //Constructor
-  EventData(int nyear, int nmonth, int ndays, int nhours, int nmins, String nevent){
+  EventData(
+      int nyear, int nmonth, int ndays, int nhours, int nmins, String nevent) {
     year = nyear;
     month = nmonth;
     days = ndays;
@@ -18,7 +19,7 @@ class EventData {
     mins = nmins;
     event = nevent;
   }
-  void show(){
+  void show() {
     print("year: " + year.toString());
     print("month: " + month.toString());
     print("days: " + days.toString());
@@ -26,13 +27,24 @@ class EventData {
     print("mins: " + mins.toString());
     print("event: " + event);
   }
-  String exportInfo(){
 
-    String info = year.toString() + "," + month.toString() + ","+ days.toString()+ "," + hours.toString()+ "," + mins.toString()+ "," + event;
+  String exportInfo() {
+    String info = 'Year: ' +
+        year.toString() +
+        ", Month: " +
+        month.toString() +
+        ", Days: " +
+        days.toString() +
+        ", Time: " +
+        hours.toString() +
+        ":" +
+        mins.toString() +
+        "," +
+        event;
     return info;
   }
 
-  EventData loadInfo(String s){
+  EventData loadInfo(String s) {
     List<String> info = s.split(",");
     year = int.parse(info[0]);
     month = int.parse(info[1]);
@@ -42,8 +54,5 @@ class EventData {
     event = info[5];
 
     return this;
-
   }
-
-
 }

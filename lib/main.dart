@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'calender.dart';
 import 'reminder.dart';
 import 'event.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -31,34 +32,35 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   List<EventData> saveData = [];
 
   void save() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> saveDataInString = [];
-    for(int i = 0; i < saveData.length; i++){
+    for (int i = 0; i < saveData.length; i++) {
       saveDataInString.add(saveData[i].exportInfo());
     }
     prefs.setStringList("eventInfo", saveDataInString);
   }
-  void load() async{
+
+  void load() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     List<String>? saveDataInString = prefs.getStringList("eventInfo");
-    for(int i = 0; i < saveDataInString!.length; i++){
-      EventData temp = EventData(0,0,0,0,0,'0');
+    for (int i = 0; i < saveDataInString!.length; i++) {
+      EventData temp = EventData(0, 0, 0, 0, 0, '0');
       saveData.add(temp.loadInfo(saveDataInString[i]));
     }
   }
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     setState(() {
       load();
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     save();
@@ -67,80 +69,64 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          children:[
-            Expanded(
-              flex:20,
-              child: Text(
-                  'Calendar',
-                  style: TextStyle(
-                    fontSize: 50,
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  )
-              ),
-                ),
-            Expanded(
-               flex:10,
-                child:Container(
-                  margin: EdgeInsets.only(top:30,bottom:30),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        setState(() {});
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CalenderPage(data: saveData)),
-                        );
-                      },
-                      child: Text(
-                          'Calendar',
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          )
-
-                      )
-
-                  ),
-                ),
+          child: Column(
+        children: [
+          Expanded(
+            flex: 20,
+            child: Text('Calendar',
+                style: TextStyle(
+                  fontSize: 50,
+                  fontStyle: FontStyle.normal,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                )),
+          ),
+          Expanded(
+            flex: 10,
+            child: Container(
+              margin: EdgeInsets.only(top: 30, bottom: 30),
+              child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {});
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CalenderPage(data: saveData)),
+                    );
+                  },
+                  child: Text('Calendar',
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ))),
             ),
-            Expanded(
-              flex:10,
-              child:Container(
-                margin: EdgeInsets.only(top:30,bottom:30),
-                child:ElevatedButton(
-                    onPressed: (){
-                      setState(() {});
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ReminderPage(data: saveData)),
-                      );
-                    }
-
-                    ,
-                    child: Text(
-                        'Reminder',
-                        style: TextStyle(
-                          fontSize: 40,
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        )
-
-                    )
-
-                ),
-              ),
+          ),
+          Expanded(
+            flex: 10,
+            child: Container(
+              margin: EdgeInsets.only(top: 30, bottom: 30),
+              child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {});
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ReminderPage(data: saveData)),
+                    );
+                  },
+                  child: Text('Reminder',
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ))),
             ),
-
-                            ],
-                     )
-                  ),
+          ),
+        ],
+      )),
     );
   }
-
 }

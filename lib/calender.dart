@@ -10,13 +10,13 @@ class CalenderPage extends StatefulWidget {
   @override
   _CalenderPageState createState() => _CalenderPageState();
 }
-class _CalenderPageState extends State<CalenderPage> {
 
+class _CalenderPageState extends State<CalenderPage> {
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
 
-  void checkDate(){
+  void checkDate() {
     DateTime.now();
   }
 
@@ -25,93 +25,133 @@ class _CalenderPageState extends State<CalenderPage> {
     setState(() {});
     return Scaffold(
       appBar: AppBar(
-
         title: Text("Calendar"),
       ),
-      body: TableCalendar(
-        focusedDay: DateTime.now(),
-        firstDay: DateTime(2000),
-        lastDay: DateTime(2099),
-        calendarFormat: format,
-        onFormatChanged: (CalendarFormat _format) {
-          setState(() {
-            format = _format;
-          });
-        },
-        startingDayOfWeek: StartingDayOfWeek.sunday,
-        daysOfWeekVisible: true,
-        onDaySelected: (DateTime selectDay, DateTime focusDay) {
-          setState(() {
-            selectedDay = selectDay;
-            focusedDay = focusDay;
-          });
-          print(focusDay);
-        },
-        selectedDayPredicate: (DateTime date) {
-          return isSameDay(selectedDay, date);
-        },
-        calendarStyle: CalendarStyle(
-          isTodayHighlighted: true,
-          selectedDecoration: BoxDecoration(
-            color: Colors.blue,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(5.0),
+      body: SingleChildScrollView(
+          child: Column(
+        children: [
+          TableCalendar(
+            focusedDay: DateTime.now(),
+            firstDay: DateTime(2000),
+            lastDay: DateTime(2099),
+            calendarFormat: format,
+            onFormatChanged: (CalendarFormat _format) {
+              setState(() {
+                format = _format;
+              });
+            },
+            startingDayOfWeek: StartingDayOfWeek.sunday,
+            daysOfWeekVisible: true,
+            onDaySelected: (DateTime selectDay, DateTime focusDay) {
+              setState(() {
+                selectedDay = selectDay;
+                focusedDay = focusDay;
+              });
+              print("Focus Day: " + focusDay.toString());
+            },
+            selectedDayPredicate: (DateTime date) {
+              return isSameDay(selectedDay, date);
+            },
+            calendarStyle: CalendarStyle(
+              isTodayHighlighted: true,
+              selectedDecoration: BoxDecoration(
+                color: Colors.blue,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              selectedTextStyle: TextStyle(
+                color: Colors.black,
+              ),
+              todayDecoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              defaultDecoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              weekendDecoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
+            headerStyle: HeaderStyle(
+              formatButtonVisible: true,
+              titleCentered: true,
+              formatButtonShowsNext: false,
+              formatButtonDecoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              formatButtonTextStyle: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
-          selectedTextStyle: TextStyle(
-            color: Colors.black,
+          SizedBox(
+            height: 30,
           ),
-          todayDecoration: BoxDecoration(
-            color: Colors.red,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          defaultDecoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          weekendDecoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-
-        ),
-        headerStyle: HeaderStyle(
-          formatButtonVisible: true,
-          titleCentered: true,
-          formatButtonShowsNext: false,
-          formatButtonDecoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.circular(5.0),
-          ),
-          formatButtonTextStyle: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Flexible(
+              child: Column(
+                children: _buildEventWidget(context),
+              ),
+            )
+          ])
+        ],
+      )),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          setState(() {});
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SetUpPage(date: selectedDay, data: widget.data,)),
-          );
-
-/*          print("year: " + test.year.toString());
-          print("month: " + test.month.toString());
-          print("days: " + test.days.toString());
-          print("hours: " + test.hours.toString());
-          print("mins: " + test.mins.toString());
-          print("event: " + test.event);*/
-        },
-        child: Icon(Icons.add)
-      ),
+          onPressed: () {
+            setState(() {});
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => SetUpPage(
+                        date: selectedDay,
+                        data: widget.data,
+                      )),
+            );
+          },
+          child: Icon(Icons.add)),
     );
   }
+
+  List<Widget> _buildEventWidget(BuildContext context) {
+    List<Widget> result = [];
+
+    widget.data.forEach((element) {
+      if (element.year == selectedDay.year &&
+          element.month == selectedDay.month &&
+          element.days == selectedDay.day) {
+        print("Found matched day on: " + selectedDay.toString());
+        result.add(SimpleDialogOption(
+          onPressed: () {
+            _buildDetailEventDialog(context, element);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text("Date: " + selectedDay.toString().split(' ')[0]),
+              Text("Event: " + element.event),
+            ],
+          ),
+        ));
+      }
+    });
+
+    return result;
+  }
+
+  Future<void> _buildDetailEventDialog(
+      BuildContext context, EventData element) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            title: const Text('Detail For Event:'),
+            children: <Widget>[Text(element.exportInfo())],
+          );
+        });
+  }
 }
-
-
-
-
-
-
-
