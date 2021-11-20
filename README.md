@@ -1,6 +1,7 @@
 # studentreminder
+4750 project
+This is a calender app build by flutter.
 
-A new Flutter project.
 
 ## Getting Started
 
