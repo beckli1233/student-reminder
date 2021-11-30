@@ -68,15 +68,6 @@ class _ReminderPageState extends State< ReminderPage> {
         );
         },
       ),
-/*        floatingActionButton: FloatingActionButton(
-            onPressed: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SetUpPage(title:'Set Up Event')),
-              );
-            },
-          child: Icon(Icons.add)
-        ),*/
     );
 
   }

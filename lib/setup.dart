@@ -1,6 +1,6 @@
 import 'event.dart';
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
+
 
 class SetUpPage extends StatefulWidget {
   SetUpPage({Key? key, required this.date, required this.data})
@@ -14,9 +14,6 @@ class SetUpPage extends StatefulWidget {
 
 class _SetUpPageState extends State<SetUpPage> {
   var eventController = TextEditingController();
-  var hoursController = TextEditingController();
-  var minsController = TextEditingController();
-
   int hourDropdownVal = 0;
   int minDropdownVal = 0;
 

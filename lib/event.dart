@@ -1,6 +1,3 @@
-import 'dart:math';
-import 'package:flutter/cupertino.dart';
-
 class EventData {
   String event = "1";
   int year = 2000;
