@@ -6,7 +6,9 @@ import 'reminder.dart';
 import 'event.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MyApp(
+
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -14,6 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'title',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -63,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     save();
 
     return Scaffold(
